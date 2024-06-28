@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1 Billion AI Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>1 Billion AI Assistant</h1>
+        
+        <div id="auth-container">
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="authenticate()">Login</button>
+        </div>
+
+        <div id="chat-interface" style="display: none;">
+            <div id="chat-container"></div>
+            <input type="text" id="user-input" placeholder="Enter your query">
+            <button onclick="sendQuery()">Send</button>
+            
+            <div id="file-upload">
+                <input type="file" id="file-input">
+                <button onclick="uploadFile()">Upload</button>
+            </div>
+
+            <div id="visualization-container"></div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

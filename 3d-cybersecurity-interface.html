@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethical Hacking 3D Interface</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        #info { position: absolute; top: 10px; width: 100%; text-align: center; color: white; }
+    </style>
+</head>
+<body>
+    <div id="info">Ethical Hacking Simulation</div>
+    <script>
+        let scene, camera, renderer, nodes = [], connections = [];
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            // Create network nodes
+            for (let i = 0; i < 20; i++) {
+                const geometry = new THREE.SphereGeometry(0.2, 32, 32);
+                const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+                const node = new THREE.Mesh(geometry, material);
+                node.position.set(
+                    Math.random() * 10 - 5,
+                    Math.random() * 10 - 5,
+                    Math.random() * 10 - 5
+                );
+                scene.add(node);
+                nodes.push(node);
+            }
+
+            // Create connections
+            const lineMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff });
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    if (Math.random() > 0.8) {
+                        const geometry = new THREE.BufferGeometry().setFromPoints([
+                            nodes[i].position,
+                            nodes[j].position
+                        ]);
+                        const line = new THREE.Line(geometry, lineMaterial);
+                        scene.add(line);
+                        connections.push(line);
+                    }
+                }
+            }
+
+            camera.position.z = 15;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Rotate nodes
+            nodes.forEach(node => {
+                node.rotation.x += 0.01;
+                node.rotation.y += 0.01;
+            });
+
+            // Simulate "data transfer"
+            connections.forEach(connection => {
+                const positions = connection.geometry.attributes.position.array;
+                for (let i = 0; i < positions.length; i++) {
+                    positions[i] += Math.random() * 0.01 - 0.005;
+                }
+                connection.geometry.attributes.position.needsUpdate = true;
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        init();
+        animate();
+
+        // Handle window resizing
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
